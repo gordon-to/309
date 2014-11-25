@@ -47,6 +47,9 @@
 	echo form_label('Email');
 	echo form_error('email');
 	echo form_input('email',set_value('email'),"required");
+	echo img(array('src' => site_url('secureimagetest/securimage'), 'alt' => 'captcha', 'id' => 'captcha'));
+	echo form_input(array('name' => 'captcha'));
+	echo form_error('captcha');
 	echo form_submit('submit', 'Register');
 	echo form_close();
 ?>	

@@ -39,6 +39,7 @@
 */
 
 $route['default_controller'] = "arcade";
+//$route['si'] = "secureimagetest";
 $route['404_override'] = '';
 
 /* End of file routes.php */

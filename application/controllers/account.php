@@ -6,7 +6,38 @@ class Account extends CI_Controller {
     		// Call the Controller constructor
 	    	parent::__construct();
 	    	session_start();
+	    	$this->load->helper('html');
     }
+
+    public function _check_captcha()
+	{
+		$this->load->library('securimage/securimage');
+		$securimage = new Securimage();	
+
+		if( ! $securimage->check($this->input->post('captcha')))
+		{
+			$this->form_validation->set_message('_check_captcha', 'The code you entered is invalid');
+			return FALSE;
+		}
+		else
+		{
+			return TRUE;
+		}
+	}
+
+	public function securimage()
+	{
+		$this->load->config('csecurimage');
+		$active = $this->config->item('si_active');		
+		$allsettings = array_merge($this->config->item($active), $this->config->item('si_general'));
+
+		$this->load->library('securimage/securimage');
+		$img = new Securimage($allsettings);
+		
+		//$img->captcha_type = Securimage::SI_CAPTCHA_MATHEMATIC;
+		
+		$img->show(APPPATH . 'libraries/securimage/backgrounds/bg6.png');
+	}
         
     public function _remap($method, $params = array()) {
 	    	// enforce access control to protected functions	
@@ -76,7 +107,7 @@ class Account extends CI_Controller {
 	    	$this->form_validation->set_rules('first', 'First', "required");
 	    	$this->form_validation->set_rules('last', 'last', "required");
 	    	$this->form_validation->set_rules('email', 'Email', "required|is_unique[user.email]");
-	    	
+	    	$this->form_validation->set_rules('captcha', 'captcha', 'trim|required|callback__check_captcha');
 	    
 	    	if ($this->form_validation->run() == FALSE)
 	    	{
